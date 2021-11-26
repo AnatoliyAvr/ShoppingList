@@ -1,4 +1,4 @@
-package com.tolikavr.shopinglist.domain
+package com.tolikavr.shopinglist.domain.model
 
 data class ShopItem(
   val id: Int,

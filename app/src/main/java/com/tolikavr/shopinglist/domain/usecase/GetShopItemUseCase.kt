@@ -1,10 +1,11 @@
 package com.tolikavr.shopinglist.domain.usecase
 
-import com.tolikavr.shopinglist.domain.ShopItem
+import com.tolikavr.shopinglist.domain.model.ShopItem
+import com.tolikavr.shopinglist.domain.repository.ShopListRepository
 
-class GetShopItemUseCase {
+class GetShopItemUseCase(private val shopListRepository: ShopListRepository) {
 
   fun getShopItem(shopId: Int): ShopItem {
-    TODO()
+    return shopListRepository.getShopItem(shopId)
   }
 }
