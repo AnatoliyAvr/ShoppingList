@@ -1,7 +1,8 @@
-package com.tolikavr.shopinglist
+package com.tolikavr.shopinglist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.tolikavr.shopinglist.R
 
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
