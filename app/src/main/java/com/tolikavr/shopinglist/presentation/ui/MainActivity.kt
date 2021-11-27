@@ -5,11 +5,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.tolikavr.shopinglist.R
-import com.tolikavr.shopinglist.domain.model.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
   private lateinit var viewModel: MainViewModel
+  private var count = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -17,12 +17,13 @@ class MainActivity : AppCompatActivity() {
 
     viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-    viewModel.getShopList()
-    viewModel.deleteShopItem(ShopItem("Name0", 0, true, 0))
-    viewModel.changeEnableState(ShopItem("Name1", 1, true, 1))
-
     viewModel.shopList.observe(this) {
       Log.d("MainActivityTest", "$it")
+      if (count == 0) {
+        count++
+        viewModel.deleteShopItem(it[0])
+        viewModel.changeEnableState(it[1])
+      }
     }
 
   }
