@@ -13,7 +13,7 @@ class MainViewModel : ViewModel() {
 
   private val getShopListUseCase = GetShopListUseCase(repository)
   private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
-  private val editShopItemUseCase = EditShopItemUseCase(repository)
+  var editShopItemUseCase = EditShopItemUseCase(repository)
 
   val shopList = getShopListUseCase.getShopList()
 
