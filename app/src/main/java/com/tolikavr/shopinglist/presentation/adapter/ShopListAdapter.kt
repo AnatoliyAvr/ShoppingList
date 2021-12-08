@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.tolikavr.shopinglist.R
 import com.tolikavr.shopinglist.domain.model.ShopItem
@@ -21,6 +22,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
   var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
+  var onShopItemClickListener: ((ShopItem) -> Unit)? = null
+  var onDelete: ((ShopItem) -> Unit)? = null
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
     Log.d("AAA", "${++count}")
@@ -36,9 +39,11 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
 
   override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
     val shopItem = shopList[position]
-    holder.bind(shopItem) {
+    holder.bind(shopItem, {
       onShopItemLongClickListener?.invoke(shopItem)
-    }
+    }, {
+      onShopItemClickListener?.invoke(shopItem)
+    })
   }
 
   override fun getItemCount(): Int = shopList.size
@@ -61,12 +66,15 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     private val tvName = view.findViewById<TextView>(R.id.tv_name)
     private val tvCount = view.findViewById<TextView>(R.id.tv_count)
 
-    fun bind(shopItem: ShopItem, block: () -> Unit) {
+    fun bind(shopItem: ShopItem, longClick: () -> Unit, click: () -> Unit) {
       tvName.text = shopItem.name
       tvCount.text = shopItem.count.toString()
       view.setOnLongClickListener {
-        block()
+        longClick()
         true
+      }
+      view.setOnClickListener {
+        click()
       }
     }
   }
