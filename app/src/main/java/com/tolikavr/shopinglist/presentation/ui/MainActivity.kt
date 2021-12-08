@@ -1,12 +1,10 @@
 package com.tolikavr.shopinglist.presentation.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.tolikavr.shopinglist.R
-import com.tolikavr.shopinglist.domain.model.ShopItem
 import com.tolikavr.shopinglist.presentation.adapter.ShopListAdapter
 
 class MainActivity : AppCompatActivity() {
@@ -35,10 +33,8 @@ class MainActivity : AppCompatActivity() {
       recycledViewPool.setMaxRecycledViews(ShopListAdapter.VIEW_TYPE_ENABLE, ShopListAdapter.MAX_POOL_SIZE)
       recycledViewPool.setMaxRecycledViews(ShopListAdapter.VIEW_TYPE_DISABLE, ShopListAdapter.MAX_POOL_SIZE)
     }
-    shopListAdapter.onShopItemLongClickListener = object : ShopListAdapter.OnShopItemLongClickListener {
-      override fun onShopItemLongClick(shopItem: ShopItem) {
-        viewModel.changeEnableState(shopItem)
-      }
+    shopListAdapter.onShopItemLongClickListener = {
+      viewModel.changeEnableState(it)
     }
   }
 
