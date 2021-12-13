@@ -1,21 +1,38 @@
 package com.tolikavr.shoppinglist.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tolikavr.shoppinglist.R
+import com.tolikavr.shoppinglist.domain.model.ShopItem
 import com.tolikavr.shoppinglist.presentation.adapter.ShopListAdapter
+import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.COUNT
+import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.NAME
 
 class MainActivity : AppCompatActivity() {
 
   private lateinit var viewModel: MainViewModel
   private lateinit var shopListAdapter: ShopListAdapter
+  private lateinit var fab: FloatingActionButton
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    fab = findViewById(R.id.button_add_shop_item)
+
+    fab.setOnClickListener {
+      val intent = Intent(this, ShopItemActivity::class.java)
+      startActivity(intent)
+    }
+    shopListAdapter = ShopListAdapter()
+    val name = intent.getStringExtra(NAME) ?: "name"
+    val count = intent.getIntExtra(COUNT, 0)
+    shopListAdapter.submitList(listOf(ShopItem(name, count, false, 20)))
 
     setupRecyclerView()
 
@@ -28,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun setupRecyclerView() {
     val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
-    shopListAdapter = ShopListAdapter()
+    //shopListAdapter = ShopListAdapter()
     with(rvShopList) {
       adapter = shopListAdapter
       recycledViewPool.setMaxRecycledViews(ShopListAdapter.VIEW_TYPE_ENABLE, ShopListAdapter.MAX_POOL_SIZE)
