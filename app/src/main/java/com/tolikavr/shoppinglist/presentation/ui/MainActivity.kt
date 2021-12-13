@@ -11,22 +11,25 @@ import com.tolikavr.shoppinglist.R
 import com.tolikavr.shoppinglist.domain.model.ShopItem
 import com.tolikavr.shoppinglist.presentation.adapter.ShopListAdapter
 import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.COUNT
+import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.EXTRA_SCREEN_MODE
+import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.MODE_ADD
+import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.MODE_EDIT
 import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.NAME
 
 class MainActivity : AppCompatActivity() {
 
   private lateinit var viewModel: MainViewModel
   private lateinit var shopListAdapter: ShopListAdapter
-  private lateinit var fab: FloatingActionButton
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    fab = findViewById(R.id.button_add_shop_item)
+    val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
 
-    fab.setOnClickListener {
+    buttonAddItem.setOnClickListener {
       val intent = Intent(this, ShopItemActivity::class.java)
+      intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
       startActivity(intent)
     }
     shopListAdapter = ShopListAdapter()
@@ -78,6 +81,9 @@ class MainActivity : AppCompatActivity() {
 
   private fun setupClickListener() {
     shopListAdapter.onShopItemClickListener = {
+      val intent = Intent(this, ShopItemActivity::class.java)
+      intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
+      startActivity(intent)
     }
   }
 
