@@ -1,6 +1,5 @@
 package com.tolikavr.shoppinglist.presentation.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -8,13 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tolikavr.shoppinglist.R
-import com.tolikavr.shoppinglist.domain.model.ShopItem
 import com.tolikavr.shoppinglist.presentation.adapter.ShopListAdapter
-import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.COUNT
-import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.EXTRA_SCREEN_MODE
-import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.MODE_ADD
-import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.MODE_EDIT
-import com.tolikavr.shoppinglist.presentation.ui.ShopItemActivity.Companion.NAME
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,18 +18,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
-
-    buttonAddItem.setOnClickListener {
-      val intent = Intent(this, ShopItemActivity::class.java)
-      intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
-      startActivity(intent)
-    }
-    shopListAdapter = ShopListAdapter()
-    val name = intent.getStringExtra(NAME) ?: "name"
-    val count = intent.getIntExtra(COUNT, 0)
-    shopListAdapter.submitList(listOf(ShopItem(name, count, false, 20)))
-
     setupRecyclerView()
 
     viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -44,11 +25,18 @@ class MainActivity : AppCompatActivity() {
     viewModel.shopList.observe(this) {
       shopListAdapter.submitList(it)
     }
+
+    val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+
+    buttonAddItem.setOnClickListener {
+      val intent = ShopItemActivity.newIntentAddItem(this)
+      startActivity(intent)
+    }
   }
 
   private fun setupRecyclerView() {
     val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
-    //shopListAdapter = ShopListAdapter()
+    shopListAdapter = ShopListAdapter()
     with(rvShopList) {
       adapter = shopListAdapter
       recycledViewPool.setMaxRecycledViews(ShopListAdapter.VIEW_TYPE_ENABLE, ShopListAdapter.MAX_POOL_SIZE)
@@ -80,9 +68,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun setupClickListener() {
-    shopListAdapter.onShopItemClickListener = {
-      val intent = Intent(this, ShopItemActivity::class.java)
-      intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
+    shopListAdapter.onShopItemClickListener = { shopItem ->
+      val intent = ShopItemActivity.newIntentEditItem(this, shopItem.id)
       startActivity(intent)
     }
   }
