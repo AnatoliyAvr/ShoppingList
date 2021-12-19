@@ -1,5 +1,6 @@
-package com.tolikavr.shoppinglist.presentation.ui
+package com.tolikavr.shoppinglist.presentation.ui.shopitem
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

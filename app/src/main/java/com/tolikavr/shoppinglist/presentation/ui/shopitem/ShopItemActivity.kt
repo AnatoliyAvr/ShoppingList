@@ -1,13 +1,13 @@
-package com.tolikavr.shoppinglist.presentation.ui
+package com.tolikavr.shoppinglist.presentation.ui.shopitem
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputLayout
 import com.tolikavr.shoppinglist.R
@@ -32,23 +32,79 @@ class ShopItemActivity : AppCompatActivity() {
     parseIntent()
     viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
     initViews()
+    addTextChangeListeners()
+    launchRightMode()
+    observeViewModel()
+  }
+
+  private fun observeViewModel() {
+    viewModel.errorInputName.observe(this) {
+      val message = if (it) {
+        getString(R.string.error_input_name)
+      } else {
+        null
+      }
+      tilName.error = message
+    }
+
+    viewModel.errorInputCount.observe(this) {
+      val message = if (it) {
+        getString(R.string.error_input_count)
+      } else {
+        null
+      }
+      tilCount.error = message
+    }
+
+    viewModel.shouldCloseScreen.observe(this) {
+      finish()
+    }
+  }
+
+  private fun launchRightMode() {
     when (screenMode) {
       MODE_EDIT -> launchEditMode()
       MODE_ADD -> launchAddMode()
     }
+  }
 
-    buttonSave.setOnClickListener {
-      val intent = Intent(this, MainActivity::class.java)
-      startActivity(intent)
-    }
+  private fun addTextChangeListeners() {
+    etName.addTextChangedListener(object : TextWatcher {
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        viewModel.resetErrorInputName()
+      }
+
+      override fun afterTextChanged(s: Editable?) {}
+    })
+
+    etCount.addTextChangedListener(object : TextWatcher {
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        viewModel.resetErrorInputCount()
+      }
+
+      override fun afterTextChanged(s: Editable?) {}
+    })
   }
 
   private fun launchEditMode() {
-    viewModel.editShopItem(etName.text.toString(), etCount.text.toString())
+    viewModel.getShopItem(shopItemId)
+    viewModel.shopItem.observe(this, {
+      etName.text = it.name
+      etCount.text = it.count.toString()
+    })
+    buttonSave.setOnClickListener {
+      viewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
+    }
   }
 
   private fun launchAddMode() {
-    viewModel.editShopItem(etName.text.toString(), etCount.text.toString())
+    buttonSave.setOnClickListener {
+      viewModel.addShopItem(etName.text?.toString(), etCount.text?.toString())
+    }
   }
 
   private fun parseIntent() {

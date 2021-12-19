@@ -1,4 +1,4 @@
-package com.tolikavr.shoppinglist.presentation.ui
+package com.tolikavr.shoppinglist.presentation.ui.main
 
 import androidx.lifecycle.ViewModel
 import com.tolikavr.shoppinglist.data.repository.ShopListRepositoryImpl
