@@ -29,7 +29,6 @@ class ShopItemFragment(
   private lateinit var etCount: TextView
   private lateinit var buttonSave: Button
 
-
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     return inflater.inflate(R.layout.fragment_shop_item, container, false)
   }
@@ -42,7 +41,6 @@ class ShopItemFragment(
     addTextChangeListeners()
     launchRightMode()
     observeViewModel()
-
   }
 
   private fun observeViewModel() {
@@ -65,7 +63,7 @@ class ShopItemFragment(
     }
 
     viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-      requireActivity().finish()
+      activity?.onBackPressed()
     }
   }
 
@@ -138,6 +136,14 @@ class ShopItemFragment(
     private const val MODE_EDIT = "mode_edit"
     private const val MODE_ADD = "mode_add"
     private const val MODE_UNKNOWN = ""
+
+    fun newInstanceAddItem(): ShopItemFragment {
+      return ShopItemFragment(MODE_ADD)
+    }
+
+    fun newInstanceEditItem(shopItemId: Int): ShopItemFragment {
+      return ShopItemFragment(MODE_EDIT, shopItemId)
+    }
 
     fun newIntentAddItem(context: Context): Intent {
       val intent = Intent(context, ShopItemActivity::class.java)
