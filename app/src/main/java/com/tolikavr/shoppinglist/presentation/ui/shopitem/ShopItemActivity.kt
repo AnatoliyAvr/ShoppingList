@@ -15,29 +15,29 @@ import com.tolikavr.shoppinglist.domain.model.ShopItem
 
 class ShopItemActivity : AppCompatActivity() {
 
-  private lateinit var viewModel: ShopItemViewModel
+//  private lateinit var viewModel: ShopItemViewModel
 
-  private lateinit var tilName: TextInputLayout
-  private lateinit var tilCount: TextInputLayout
-  private lateinit var etName: TextView
-  private lateinit var etCount: TextView
-  private lateinit var buttonSave: Button
-
-  private var screenMode = MODE_UNKNOWN
-  private var shopItemId = ShopItem.UNDEFINED_ID
+//  private lateinit var tilName: TextInputLayout
+//  private lateinit var tilCount: TextInputLayout
+//  private lateinit var etName: TextView
+//  private lateinit var etCount: TextView
+//  private lateinit var buttonSave: Button
+//
+//  private var screenMode = MODE_UNKNOWN
+//  private var shopItemId = ShopItem.UNDEFINED_ID
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_shop_item)
-    parseIntent()
+/*    parseIntent()
     viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
     initViews()
     addTextChangeListeners()
     launchRightMode()
-    observeViewModel()
+    observeViewModel()*/
   }
 
-  private fun observeViewModel() {
+/*  private fun observeViewModel() {
     viewModel.errorInputName.observe(this) {
       val message = if (it) {
         getString(R.string.error_input_name)
@@ -130,7 +130,7 @@ class ShopItemActivity : AppCompatActivity() {
     etName = findViewById(R.id.et_name)
     etCount = findViewById(R.id.et_count)
     buttonSave = findViewById(R.id.save_button)
-  }
+  }*/
 
   companion object {
     private const val EXTRA_SCREEN_MODE = "extra_mode"
