@@ -2,9 +2,10 @@ package com.tolikavr.shoppinglist.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.tolikavr.shoppinglist.R
-import com.tolikavr.shoppinglist.databinding.ItemShopDisabledBinding
 import com.tolikavr.shoppinglist.domain.model.ShopItem
 
 
@@ -19,8 +20,9 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCa
       VIEW_TYPE_DISABLE -> R.layout.item_shop_disabled
       else -> throw RuntimeException("Unknown view type: $viewType")
     }
-    val binding = ItemShopDisabledBinding.inflate(
+    val binding = DataBindingUtil.inflate<ViewDataBinding>(
       LayoutInflater.from(parent.context),
+      layout,
       parent,
       false
     )
