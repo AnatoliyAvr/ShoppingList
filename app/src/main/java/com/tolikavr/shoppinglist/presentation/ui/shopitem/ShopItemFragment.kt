@@ -13,9 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputLayout
 import com.tolikavr.shoppinglist.R
+import com.tolikavr.shoppinglist.databinding.FragmentShopItemBinding
 import com.tolikavr.shoppinglist.domain.model.ShopItem
 
 class ShopItemFragment : Fragment() {
+
+  private var _binding: FragmentShopItemBinding? = null
+  private val binding: FragmentShopItemBinding
+    get() = _binding ?: throw  RuntimeException("FragmentChooseLevelBinding == null")
 
   private lateinit var viewModel: ShopItemViewModel
   private lateinit var onEditingFinishedListener: OnEditingFinishedListener
@@ -44,7 +49,8 @@ class ShopItemFragment : Fragment() {
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return inflater.inflate(R.layout.fragment_shop_item, container, false)
+    _binding = FragmentShopItemBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -179,5 +185,10 @@ class ShopItemFragment : Fragment() {
         }
       }
     }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    _binding = null
   }
 }

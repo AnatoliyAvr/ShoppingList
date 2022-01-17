@@ -10,19 +10,23 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tolikavr.shoppinglist.R
+import com.tolikavr.shoppinglist.databinding.ActivityMainBinding
 import com.tolikavr.shoppinglist.presentation.adapter.ShopListAdapter
 import com.tolikavr.shoppinglist.presentation.ui.shopitem.ShopItemActivity
 import com.tolikavr.shoppinglist.presentation.ui.shopitem.ShopItemFragment
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
+  private lateinit var binding: ActivityMainBinding
   private lateinit var viewModel: MainViewModel
   private lateinit var shopListAdapter: ShopListAdapter
   private var shopItemContainer: FragmentContainerView? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
     shopItemContainer = findViewById(R.id.shop_item_container)
 
     setupRecyclerView()
