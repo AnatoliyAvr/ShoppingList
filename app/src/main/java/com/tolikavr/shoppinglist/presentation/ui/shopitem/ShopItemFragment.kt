@@ -34,7 +34,7 @@ class ShopItemFragment : Fragment() {
     if (context is OnEditingFinishedListener) {
       onEditingFinishedListener = context
     } else {
-      throw java.lang.RuntimeException("Activity must implement OnEditingFinishedListener")
+      throw RuntimeException("Activity must implement OnEditingFinishedListener")
     }
   }
 
