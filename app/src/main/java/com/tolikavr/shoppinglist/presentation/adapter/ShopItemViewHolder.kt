@@ -11,13 +11,11 @@ class ShopItemViewHolder(private val binding: ViewDataBinding) : RecyclerView.Vi
   fun bind(shopItem: ShopItem, longClick: () -> Unit, click: () -> Unit) {
     when (binding) {
       is ItemShopDisabledBinding -> {
-        binding.tvName.text = shopItem.name
-        binding.tvCount.text = shopItem.count.toString()
+        binding.shopItem = shopItem
       }
 
       is ItemShopEnabledBinding -> {
-        binding.tvName.text = shopItem.name
-        binding.tvCount.text = shopItem.count.toString()
+        binding.shopItem = shopItem
       }
     }
     binding.root.setOnLongClickListener {
