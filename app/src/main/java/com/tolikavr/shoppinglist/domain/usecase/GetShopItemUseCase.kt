@@ -5,7 +5,7 @@ import com.tolikavr.shoppinglist.domain.repository.ShopListRepository
 
 class GetShopItemUseCase(private val shopListRepository: ShopListRepository) {
 
-  fun getShopItem(shopId: Int): ShopItem {
+  suspend fun getShopItem(shopId: Int): ShopItem {
     return shopListRepository.getShopItem(shopId)
   }
 }

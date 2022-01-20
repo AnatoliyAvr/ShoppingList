@@ -7,6 +7,10 @@ import com.tolikavr.shoppinglist.domain.model.ShopItem
 import com.tolikavr.shoppinglist.domain.usecase.DeleteShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.EditShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.GetShopListUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -16,14 +20,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
   private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
   private var editShopItemUseCase = EditShopItemUseCase(repository)
 
+  private val scope = CoroutineScope(Dispatchers.IO)
+
   val shopList = getShopListUseCase.getShopList()
 
   fun deleteShopItem(shopItem: ShopItem) {
-    deleteShopItemUseCase.deleteShopItem(shopItem)
+    scope.launch {
+      deleteShopItemUseCase.deleteShopItem(shopItem)
+    }
   }
 
   fun changeEnableState(shopItem: ShopItem) {
-    val newItem = shopItem.copy(enabled = !shopItem.enabled)
-    editShopItemUseCase.editShopItem(newItem)
+    scope.launch {
+      val newItem = shopItem.copy(enabled = !shopItem.enabled)
+      editShopItemUseCase.editShopItem(newItem)
+    }
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    scope.cancel()
   }
 }

@@ -9,6 +9,10 @@ import com.tolikavr.shoppinglist.domain.model.ShopItem
 import com.tolikavr.shoppinglist.domain.usecase.AddShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.EditShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.GetShopItemUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -17,6 +21,8 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
   private val getShopItemUseCase = GetShopItemUseCase(repository)
   private val addShopItemUseCase = AddShopItemUseCase(repository)
   private val editShopItemUseCase = EditShopItemUseCase(repository)
+
+  private val scope = CoroutineScope(Dispatchers.IO)
 
   private val _errorInputName = MutableLiveData<Boolean>()
   val errorInputName: LiveData<Boolean>
@@ -35,8 +41,10 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     get() = _shouldCloseScreen
 
   fun getShopItem(shopItemId: Int) {
-    val item = getShopItemUseCase.getShopItem(shopItemId)
-    _shopItem.value = item
+    scope.launch {
+      val item = getShopItemUseCase.getShopItem(shopItemId)
+      _shopItem.value = item
+    }
   }
 
   fun addShopItem(inputName: String?, inputCount: String?) {
@@ -44,9 +52,11 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     val count = parseCount(inputCount)
     val fieldsValid = validateInput(name, count)
     if (fieldsValid) {
-      val shopItem = ShopItem(name, count, true)
-      addShopItemUseCase.addShopItem(shopItem)
-      finishWork()
+      scope.launch {
+        val shopItem = ShopItem(name, count, true)
+        addShopItemUseCase.addShopItem(shopItem)
+        finishWork()
+      }
     }
   }
 
@@ -56,9 +66,11 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     val fieldsValid = validateInput(name, count)
     if (fieldsValid) {
       _shopItem.value?.let {
-        val item = it.copy(name = name, count = count)
-        editShopItemUseCase.editShopItem(item)
-        finishWork()
+        scope.launch {
+          val item = it.copy(name = name, count = count)
+          editShopItemUseCase.editShopItem(item)
+          finishWork()
+        }
       }
     }
   }
@@ -98,6 +110,11 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
 
   private fun finishWork() {
     _shouldCloseScreen.value = Unit
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    scope.cancel()
   }
 
 }
