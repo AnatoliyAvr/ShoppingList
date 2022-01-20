@@ -1,15 +1,16 @@
 package com.tolikavr.shoppinglist.presentation.ui.main
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.tolikavr.shoppinglist.data.repository.ShopListRepositoryImpl
 import com.tolikavr.shoppinglist.domain.model.ShopItem
 import com.tolikavr.shoppinglist.domain.usecase.DeleteShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.EditShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.GetShopListUseCase
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val repository = ShopListRepositoryImpl
+  private val repository = ShopListRepositoryImpl(application)
 
   private val getShopListUseCase = GetShopListUseCase(repository)
   private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)

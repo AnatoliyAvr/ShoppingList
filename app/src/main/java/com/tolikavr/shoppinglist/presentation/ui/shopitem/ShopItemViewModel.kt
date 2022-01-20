@@ -1,18 +1,18 @@
 package com.tolikavr.shoppinglist.presentation.ui.shopitem
 
-import android.util.Log
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.tolikavr.shoppinglist.data.repository.ShopListRepositoryImpl
 import com.tolikavr.shoppinglist.domain.model.ShopItem
 import com.tolikavr.shoppinglist.domain.usecase.AddShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.EditShopItemUseCase
 import com.tolikavr.shoppinglist.domain.usecase.GetShopItemUseCase
 
-class ShopItemViewModel : ViewModel() {
+class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val repository = ShopListRepositoryImpl
+  private val repository = ShopListRepositoryImpl(application)
 
   private val getShopItemUseCase = GetShopItemUseCase(repository)
   private val addShopItemUseCase = AddShopItemUseCase(repository)
