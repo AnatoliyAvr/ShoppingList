@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         viewModel.shopList.observe(this) {
+
         }
     }
 }
