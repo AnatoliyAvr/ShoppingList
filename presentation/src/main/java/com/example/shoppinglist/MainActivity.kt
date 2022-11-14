@@ -1,7 +1,6 @@
 package com.example.shoppinglist
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 
@@ -14,11 +13,8 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        viewModel.getShopList()
-
         viewModel.shopList.observe(this) {
-            Log.d("AAA", "$it")
-        }
 
+        }
     }
 }
