@@ -1,8 +1,9 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.shoppinglist.R
 
 class MainActivity : AppCompatActivity() {
 
