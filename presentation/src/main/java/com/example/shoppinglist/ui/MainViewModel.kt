@@ -1,6 +1,5 @@
 package com.example.shoppinglist.ui
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.data.ShopListRepositoryImpl
 import com.example.domain.DeleteShopItemUseCase
