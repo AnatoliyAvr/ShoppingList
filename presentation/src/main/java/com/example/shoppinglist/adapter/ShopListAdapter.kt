@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.model.ShopItem
 import com.example.shoppinglist.R
 
 class ShopListAdapter(
-    val onClick: OnClick
+    private val onClick: OnClick
 ) : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
     var shopList: List<ShopItem> = emptyList()
@@ -40,8 +41,19 @@ class ShopListAdapter(
         private val tvName = item.findViewById<TextView>(R.id.tv_name)
         private val tvCount = item.findViewById<TextView>(R.id.tv_count)
         fun bind(shopItem: ShopItem) {
-            tvName.text = shopItem.name
+            val status = if (shopItem.enabled) {
+                "Active"
+            } else {
+                "Not Active"
+            }
+            tvName.text = "${shopItem.name} $status"
             tvCount.text = shopItem.count.toString()
+
+            if (shopItem.enabled) {
+                tvName.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.holo_red_light))
+            } else {
+                tvName.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.white))
+            }
         }
     }
 }

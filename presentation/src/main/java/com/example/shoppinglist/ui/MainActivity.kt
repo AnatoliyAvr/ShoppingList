@@ -17,13 +17,17 @@ class MainActivity : AppCompatActivity(), OnClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        rv = findViewById(R.id.rv_shop_list)
-        adapter = ShopListAdapter(this)
+        setupRecycler()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        rv.adapter = adapter
         viewModel.shopList.observe(this) {
             adapter.shopList = it
         }
+    }
+
+    private fun setupRecycler() {
+        rv = findViewById(R.id.rv_shop_list)
+        adapter = ShopListAdapter(this)
+        rv.adapter = adapter
     }
 
     override fun click(shopItem: ShopItem) {
