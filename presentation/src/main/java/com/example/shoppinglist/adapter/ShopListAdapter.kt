@@ -4,13 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.model.ShopItem
 import com.example.shoppinglist.R
 
+const val VIEW_TYPE_ENABLE = 100
+const val VIEW_TYPE_DISABLE = 101
+const val MAX_POOL_SIZE = 30
+
 class ShopListAdapter(
-    private val onClick: OnClick
+    private val onShopItemLongClickListener: OnShopItemLongClickListener
 ) : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
     var shopList: List<ShopItem> = emptyList()
@@ -19,12 +22,17 @@ class ShopListAdapter(
             notifyDataSetChanged()
         }
 
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
-    }
+    var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_shop_enabled, parent, false)
+        val layout = when (viewType) {
+            VIEW_TYPE_ENABLE ->
+                R.layout.item_shop_enabled
+            VIEW_TYPE_DISABLE ->
+                R.layout.item_shop_disabled
+            else -> throw RuntimeException("Unknown view type: $viewType")
+        }
+        val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
         return ShopItemViewHolder(view)
     }
 
@@ -32,32 +40,29 @@ class ShopListAdapter(
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
         holder.bind(shopItem = shopList[position])
-        holder.itemView.setOnClickListener {
-            onClick.click(shopItem = shopList[position])
+        holder.itemView.setOnLongClickListener {
+            onShopItemLongClickListener.onShopItemLongClick(shopItem = shopList[position])
+            return@setOnLongClickListener true
         }
+        holder.itemView.setOnClickListener {
+            onShopItemClickListener?.invoke(shopList[position])
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (shopList[position].enabled) VIEW_TYPE_ENABLE else VIEW_TYPE_DISABLE
     }
 
     class ShopItemViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         private val tvName = item.findViewById<TextView>(R.id.tv_name)
         private val tvCount = item.findViewById<TextView>(R.id.tv_count)
         fun bind(shopItem: ShopItem) {
-            val status = if (shopItem.enabled) {
-                "Active"
-            } else {
-                "Not Active"
-            }
-            tvName.text = "${shopItem.name} $status"
+            tvName.text = shopItem.name
             tvCount.text = shopItem.count.toString()
-
-            if (shopItem.enabled) {
-                tvName.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.holo_red_light))
-            } else {
-                tvName.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.white))
-            }
         }
     }
 }
 
-interface OnClick {
-    fun click(shopItem: ShopItem)
+interface OnShopItemLongClickListener {
+    fun onShopItemLongClick(shopItem: ShopItem)
 }
