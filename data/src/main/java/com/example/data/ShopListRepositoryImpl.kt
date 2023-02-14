@@ -8,7 +8,7 @@ import com.example.domain.repository.ShopListRepository
 object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLiveDate = MutableLiveData<List<ShopItem>>()
-    private val shopList = mutableListOf<ShopItem>()
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
     private var autoIncrementId = 0
 
     init {
@@ -32,7 +32,6 @@ object ShopListRepositoryImpl : ShopListRepository {
     }
 
     override fun deleteShopItem(shopItem: ShopItem) {
-        shopItem.id = autoIncrementId--
         shopList.remove(shopItem)
         updateList()
     }
