@@ -1,4 +1,4 @@
-package com.example.shoppinglist.ui
+package com.example.shoppinglist.ui.main
 
 import android.os.Bundle
 import android.widget.Toast
