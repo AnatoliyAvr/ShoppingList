@@ -1,4 +1,4 @@
-package com.example.shoppinglist.ui
+package com.example.shoppinglist.ui.main
 
 import androidx.lifecycle.ViewModel
 import com.example.data.ShopListRepositoryImpl
