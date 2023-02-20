@@ -1,7 +1,6 @@
 package com.example.shoppinglist.ui.main
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -11,12 +10,15 @@ import com.example.shoppinglist.adapter.MAX_POOL_SIZE
 import com.example.shoppinglist.adapter.ShopListAdapter
 import com.example.shoppinglist.adapter.VIEW_TYPE_DISABLE
 import com.example.shoppinglist.adapter.VIEW_TYPE_ENABLE
+import com.example.shoppinglist.ui.shopItem.ShopItemActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var rvShopList: RecyclerView
     private lateinit var shopListAdapter: ShopListAdapter
+    private lateinit var buttonAddShopItem: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,6 +26,10 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
+        }
+        buttonAddShopItem = findViewById(R.id.button_add_shop_item)
+        buttonAddShopItem.setOnClickListener {
+            startActivity(ShopItemActivity.newIntentAddItem(this))
         }
     }
 
@@ -48,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         shopListAdapter.onShopItemClick = {
-            Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+            startActivity(ShopItemActivity.newIntentEditItem(this, it.id, it.name, it.count))
         }
     }
 
@@ -58,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSwipeListener(rvShopList : RecyclerView) {
+    private fun setupSwipeListener(rvShopList: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) = false
 

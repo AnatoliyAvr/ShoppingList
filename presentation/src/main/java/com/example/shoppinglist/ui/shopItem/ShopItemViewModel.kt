@@ -26,11 +26,11 @@ class ShopItemViewModel : ViewModel() {
         get() = _errorInputCount
 
     private val _shopItem = MutableLiveData<ShopItem>()
-    private val shopItem: LiveData<ShopItem>
+    val shopItem: LiveData<ShopItem>
         get() = _shopItem
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
-    private val shouldCloseScreen: LiveData<Unit>
+    val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
     fun getShopItem(shopItemId: Int) {
@@ -47,7 +47,7 @@ class ShopItemViewModel : ViewModel() {
                 count = count,
                 enabled = false
             )
-            addShopItemUseCase.addShopItem(ShopItem(name = name, count = count, enabled = true))
+            addShopItemUseCase.addShopItem(shopItem)
             finishWork()
         }
     }
@@ -83,7 +83,6 @@ class ShopItemViewModel : ViewModel() {
         } catch (_: Exception) {
             0
         }
-//        return if (count?.isDigitsOnly() != null) count.toInt() else 0
     }
 
     private fun validateInput(name: String, count: Int): Boolean {
