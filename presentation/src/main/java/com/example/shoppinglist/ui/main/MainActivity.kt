@@ -2,6 +2,8 @@ package com.example.shoppinglist.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +13,7 @@ import com.example.shoppinglist.adapter.ShopListAdapter
 import com.example.shoppinglist.adapter.VIEW_TYPE_DISABLE
 import com.example.shoppinglist.adapter.VIEW_TYPE_ENABLE
 import com.example.shoppinglist.ui.shopItem.ShopItemActivity
+import com.example.shoppinglist.ui.shopItem.ShopItemFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -19,9 +22,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvShopList: RecyclerView
     private lateinit var shopListAdapter: ShopListAdapter
     private lateinit var buttonAddShopItem: FloatingActionButton
+    private var shopItemContainer: FragmentContainerView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        shopItemContainer = findViewById(R.id.shop_item_container)
         setupRecycler()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
@@ -29,8 +35,24 @@ class MainActivity : AppCompatActivity() {
         }
         buttonAddShopItem = findViewById(R.id.button_add_shop_item)
         buttonAddShopItem.setOnClickListener {
-            startActivity(ShopItemActivity.newIntentAddItem(this))
+            if (isOnePaneMode()) {
+                startActivity(ShopItemActivity.newIntentAddItem(this))
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
         }
+    }
+
+    private fun isOnePaneMode(): Boolean {
+        return shopItemContainer == null
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.shop_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupRecycler() {
@@ -54,7 +76,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         shopListAdapter.onShopItemClick = {
-            startActivity(ShopItemActivity.newIntentEditItem(this, it.id))
+            if (isOnePaneMode()) {
+                startActivity(ShopItemActivity.newIntentEditItem(this, it.id))
+            } else {
+                launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
+            }
         }
     }
 
