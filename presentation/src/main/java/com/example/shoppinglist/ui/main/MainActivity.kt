@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         shopListAdapter.onShopItemClick = {
-            startActivity(ShopItemActivity.newIntentEditItem(this, it.id, it.name, it.count))
+            startActivity(ShopItemActivity.newIntentEditItem(this, it.id))
         }
     }
 
