@@ -7,15 +7,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.domain.model.ShopItem
 import com.example.shoppinglist.R
+import com.example.shoppinglist.databinding.ActivityMainBinding
+import com.example.shoppinglist.databinding.ActivityShopItemBinding
 
 class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
+    private lateinit var binding: ActivityShopItemBinding
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shop_item)
+        binding = ActivityShopItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         parseIntent()
         if (savedInstanceState == null)
             launchRightMode()
