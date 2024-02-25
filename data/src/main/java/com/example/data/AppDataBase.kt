@@ -24,8 +24,8 @@ abstract class AppDataBase : RoomDatabase() {
                 INSTANCE?.let {
                     return it
                 }
-                val db = Room.databaseBuilder(application, AppDataBase::class.java, DB_NAME)
-                    .allowMainThreadQueries()
+                val db = Room
+                    .databaseBuilder(application, AppDataBase::class.java, DB_NAME)
                     .build()
                 INSTANCE = db
                 return db

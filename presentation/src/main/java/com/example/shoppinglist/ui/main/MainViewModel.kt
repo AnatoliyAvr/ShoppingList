@@ -2,11 +2,13 @@ package com.example.shoppinglist.ui.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.data.ShopListRepositoryImpl
 import com.example.domain.DeleteShopItemUseCase
 import com.example.domain.EditShopItemUseCase
 import com.example.domain.GetShopListUseCase
 import com.example.domain.model.ShopItem
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,10 +21,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val shopList = getShopListUseCase.getShopList()
 
     fun deleteShopItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        viewModelScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        editShopItemUseCase.editShopItem(shopItem.copy(enabled = !shopItem.enabled))
+        viewModelScope.launch {
+            editShopItemUseCase.editShopItem(shopItem.copy(enabled = !shopItem.enabled))
+        }
     }
 }
